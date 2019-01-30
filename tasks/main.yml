@@ -1,32 +1,20 @@
 ---
+- name: Check kubectl version
+  shell: "kubectl version 2>&1 | grep {{ kubectl_version }}"
+  failed_when: false
+  changed_when: false
+  register: kubectl_versions_match
 
-- name: Install necessary packages
-  apt:
-    name: "{{ packages }}"
-    state: latest
-    dpkg_options: 'force-confnew,force-confdef'
-    autoclean: yes
-    autoremove: yes
-    update_cache: yes
-  vars:
-    packages:
-    - apt-transport-https
+- include: download.yml
+  when: kubectl_versions_match.rc != 0
 
-- name: Add Apt signing key
-  apt_key:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-    state: present
-
-- name: Install necessary packages
-  apt:
-    name: "{{ packages }}"
-    state: latest
-    dpkg_options: 'force-confnew,force-confdef'
-    autoclean: yes
-    autoremove: yes
-    update_cache: yes
-  vars:
-    packages:
-    - kubectl
-
+- name: copy kubectl to /usr/local/bin/
+  copy:
+    remote_src: yes
+    src: /tmp/kubectl
+    dest: /usr/local/bin/kubectl
+    owner: root
+    group: root
+    mode: 0755
+  when: kubectl_versions_match.rc != 0
 ...

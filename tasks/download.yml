@@ -1,0 +1,6 @@
+---
+- name: Download kubectl binary
+  get_url:
+    url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version }}/bin/linux/amd64/kubectl"
+    dest: /tmp/kubectl
+...

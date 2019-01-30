@@ -10,6 +10,11 @@ Requirements
 
 This role requires ubuntu.
 
+Role Variables
+--------------
+
+    kubectl_version: v1.13.2
+
 Example Playbook
 ----------------
 
