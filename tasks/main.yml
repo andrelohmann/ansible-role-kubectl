@@ -1,6 +1,6 @@
 ---
 - name: Check kubectl version
-  shell: "kubectl version 2>&1 | grep {{ kubectl_version }}"
+  shell: "kubectl version --client=true 2>&1 | grep {{ kubectl_version }}"
   failed_when: false
   changed_when: false
   register: kubectl_versions_match
