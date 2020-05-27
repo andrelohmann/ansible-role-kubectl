@@ -1,6 +1,6 @@
 ---
 language: python
-python: "2.7"
+python: "3.6"
 
 sudo: required
 dist: xenial
@@ -9,11 +9,11 @@ dist: xenial
 addons:
   apt:
     packages:
-    - python-pip
+    - python3-pip
 
 install:
   # Install ansible
-  - pip install ansible
+  - pip3 install ansible
 
   # Check ansible version
   - ansible --version
@@ -25,9 +25,9 @@ script:
   # Basic role syntax check
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
   # Run the role/playbook with ansible-playbook.
-  - ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo
-  # run packer --version
-  - kubectl version --client=true
+  - ansible-playbook -i tests/inventory tests/test.yml --connection=local
+  # run kubectl version --client
+  - kubectl version --client
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

@@ -1,6 +1,34 @@
 ---
+- name: Install curl
+  apt:
+    name: "{{ packages }}"
+    state: latest
+    dpkg_options: 'force-confnew,force-confdef'
+    autoclean: yes
+    autoremove: yes
+    update_cache: yes
+    cache_valid_time: 3600
+  vars:
+    packages:
+    - curl
+
+- name: extract latest version number
+  block:
+
+  - name: fetch latest kubectl version
+    shell: curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt
+    args:
+      executable: /bin/bash
+    register: latest_kubectl_version
+
+  - name: set kubectl_version
+    set_fact:
+      kubectl_version: "{{ latest_kubectl_version.stdout }}"
+
+  when: kubectl_version == "latest"
+
 - name: Check kubectl version
-  shell: "kubectl version --client=true 2>&1 | grep {{ kubectl_version }}"
+  shell: "kubectl version --client --short 2>&1 | grep {{ kubectl_version }}"
   failed_when: false
   changed_when: false
   register: kubectl_versions_match
@@ -8,13 +36,4 @@
 - include: download.yml
   when: kubectl_versions_match.rc != 0
 
-- name: copy kubectl to /usr/local/bin/
-  copy:
-    remote_src: yes
-    src: /tmp/kubectl
-    dest: /usr/local/bin/kubectl
-    owner: root
-    group: root
-    mode: 0755
-  when: kubectl_versions_match.rc != 0
 ...

@@ -13,14 +13,14 @@ This role requires ubuntu.
 Role Variables
 --------------
 
-    kubectl_version: v1.13.2
+    kubectl_version: v1.18.3 # defaults to 'latest'
 
 Example Playbook
 ----------------
 
     - hosts: kubectl
       roles:
-         - { role: andrelohmann.kubectl }
+         - andrelohmann.kubectl
 
 License
 -------
